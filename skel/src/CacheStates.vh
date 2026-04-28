@@ -1,3 +1,6 @@
+`ifndef CACHE_STATES_H
+`define CACHE_STATES_H
+
 `define IDLE                  4'b0000
 `define CHECK_TAG             4'b0001
 `define WAIT_DRAM_READY       4'b0010
@@ -6,3 +9,7 @@
 `define GIVE_TO_CPU           4'b0101
 `define PREPARE_FLUSH         4'b0110
 `define DRAM_WRITE            4'b0111
+
+`endif
+
+// vim: ft=systemverilog

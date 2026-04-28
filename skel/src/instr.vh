@@ -59,3 +59,5 @@
 `define NOPE 6'd37
 
 `endif
+
+// vim: ft=systemverilog

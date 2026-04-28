@@ -35,3 +35,5 @@
 (x) > 2**0 ? 1 : 0)
 
 `endif // UTIL
+
+// vim: ft=systemverilog

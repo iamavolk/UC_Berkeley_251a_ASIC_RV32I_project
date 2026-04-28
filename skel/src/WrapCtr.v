@@ -1,18 +1,18 @@
-module WrapCtr(input clk,
-               input reset,
-               input enable,
-               output reg [4:0] count);
+module WrapCtr #(
+    // params
+)(
+    input logic clk, reset, enable,
 
-  parameter MAX_COUNT = 15;
+    output logic [4:0] count
+);
 
-  always @(posedge clk) begin
-    if (reset) begin
-      count <= 0;
-    end
-    else if (enable) begin
-      if (count == MAX_COUNT) count <= 0;
-      else count <= count + 1;
-    end
-  end
+    parameter int unsigned MAX_COUNT = 15;
+
+    always_ff @(posedge clk) begin: wraparound_counter
+        if (reset)
+            count <= 0;
+        else if (enable)
+            count <= (count == MAX_COUNT) ? 0 : count + 1;
+    end: wraparound_counter
 
 endmodule: WrapCtr

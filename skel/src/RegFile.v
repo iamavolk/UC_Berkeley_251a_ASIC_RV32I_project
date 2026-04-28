@@ -1,35 +1,37 @@
-module RegFile (input [31:0]      data_i,
-                input [4:0]       raddra_i, raddrb_i, waddr_i,
-                input             wen_i,
-                input             clk_i,
-                input             rst_i,
-                output reg [31:0] douta_o, doutb_o);
+module RegFile #(
+    parameter int unsigned N = 32
+)(
+    input logic [N-1:0] data_i,
+    input logic   [4:0] raddra_i, raddrb_i, waddr_i,
+    input logic         wen_i,
+    input logic         clk_i,
+    input logic         rst_i,
 
-  reg [31:0] regs [0:31];
+    output logic [N-1:0] douta_o, doutb_o
+);
 
-  always_comb begin
-    case (raddra_i)
-      5'b0:     douta_o = 5'b0;
-      default:  douta_o = regs[raddra_i];
-    endcase
-    case (raddrb_i)
-      5'b0:     doutb_o = 5'b0;
-      default:  doutb_o = regs[raddrb_i];
-    endcase
-  end
-  
-  //integer i;
-  genvar i;
-  generate
-    for (i = 0; i < 32; i++) begin: gen_reg_file
-      always @(posedge clk_i) begin
-        if (rst_i) begin
-          regs[i] <= 32'b0;
-        end else if (waddr_i != 5'b0 & wen_i) begin
+    /////////////////////////////////////////////
+    //      RegFile
+    /////////////////////////////////////////////
+    logic [N-1:0] regs [N];
+
+    /////////////////////////////////////////////
+    //      Sync write
+    /////////////////////////////////////////////
+    always_ff @(posedge clk_i) begin: sync_write
+      if (rst_i) begin
+          for (int i = 0; i < N; ++i) begin
+              regs[i] <= '0;
+          end
+      end else if (waddr_i != 0 && wen_i) begin
           regs[waddr_i] <= data_i;
-        end
       end
-    end
-  endgenerate
+    end: sync_write
+
+    /////////////////////////////////////////////
+    //      Async read
+    /////////////////////////////////////////////
+    assign douta_o = raddra_i ? regs[raddra_i] : '0;
+    assign doutb_o = raddrb_i ? regs[raddrb_i] : '0;
 
 endmodule: RegFile

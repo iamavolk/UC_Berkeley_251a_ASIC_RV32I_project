@@ -1,23 +1,17 @@
-module SatCtr(input clk,
-              input reset,
-              input enable,
-              output reg [3:0] count);
+module SatCtr #(
+)(
+    input logic clk, reset, enable,
 
-  parameter MAX_COUNT = 4'b0100;
+    output logic [3:0] count
+);
 
-  // Process for counting
-  always @(posedge clk) begin
-      if (reset) begin
-          count <= 4'h00;
-      end
-      else if (enable) begin
-        if (count < MAX_COUNT) begin
-            count <= count + 1;
-        end
-        else begin
-            count <= MAX_COUNT;
-        end
-      end
-  end
+  parameter int unsigned MAX_COUNT = 4;
+
+  always_ff @(posedge clk) begin: saturating
+      if (reset)
+          count <= '0;
+      else if (enable)
+          count <= (count < MAX_COUNT) ? count + 1 : MAX_COUNT;
+  end: saturating
 
 endmodule: SatCtr

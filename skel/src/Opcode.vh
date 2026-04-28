@@ -1,6 +1,6 @@
 /**
  * List of RISC-V opcodes.
- * This file was completely rewritten from the file version that was used for MIPS. 
+ * This file was completely rewritten from the file version that was used for MIPS.
  * RISC-V uses far fewer opcodes than MIPS, but many more function codes.
  */
 
@@ -87,3 +87,5 @@
 `define CLEAR_NOP       {12'd0, 5'd0, `FNC_ADD_SUB, 5'd0, `OPC_KILL}
 
 `endif //OPCODE
+
+// vim: ft=systemverilog
