@@ -43,7 +43,7 @@ module Riscv151 #(
     logic              csr_we;
     logic [DWIDTH-1:0] csr_dout;
     logic [DWIDTH-1:0] csr_din;
-    REGISTER_R_CE #(.N(DWIDTH)) csr_reg (
+    REGISTER_R_CE #(DWIDTH) csr_reg (
         .q   ( csr_dout ),
         .d   ( csr_din  ),
         .rst ( reset    ),
@@ -55,7 +55,7 @@ module Riscv151 #(
     logic        [1:0] pc_select;
     logic [DWIDTH-1:0] pc_IF, jal_select, br_jalr_select, pc_sel_mux_out;
 
-    mux3 #(.N(DWIDTH)) pc_sel_mux (
+    mux3 #(DWIDTH) pc_sel_mux (
         .in0 ( pc_IF + 4      ),
         .in1 ( jal_select     ),
         .in2 ( br_jalr_select ),
@@ -72,7 +72,7 @@ module Riscv151 #(
     );
 
     logic [DWIDTH-1:0] pc_ID;
-    REGISTER_R_CE #(.N(DWIDTH)) pc_IF_ID (
+    REGISTER_R_CE #(DWIDTH) pc_IF_ID (
         .q   ( pc_ID         ),
         .d   ( pc_IF         ),
         .rst ( reset         ),
@@ -97,7 +97,7 @@ module Riscv151 #(
 
     logic [DWIDTH-1:0] instr_ID;
     logic instr_kill = ( pc_IF == `PC_RESET ) | instr_kill_control;
-    mux2 #(.N(DWIDTH)) instr_kill_mux (
+    mux2 #(DWIDTH) instr_kill_mux (
         .in0 ( instr_IF   ),
         .in1 ( `CLEAR_NOP ),
         .sel ( instr_kill ),
@@ -126,7 +126,7 @@ module Riscv151 #(
     //           .douta_o  (rd1),
     //           .doutb_o  (rd2));
 
-    ASYNC_2R1WRAM_JWSTYLE #(.DEPTH(32), .WIDTH(32)) rf2 (
+    ASYNC_2R1WRAM_JWSTYLE #(32, 32) rf2 (
         .clk    ( clk   ),
         .rst    ( reset ),
         .we     ( we    ),
@@ -147,7 +147,7 @@ module Riscv151 #(
     logic [DWIDTH-1:0] fwd_ID_rs1_res;
 
     // FW_ID_MUX_rs1
-    mux3 #(.N(DWIDTH)) fw_ID_mux_rs1 (
+    mux3 #(DWIDTH) fw_ID_mux_rs1 (
         .in0 ( rd1            ),
         .in1 ( alu_rs1_res    ),
         .in2 ( wb_rs1_res     ),
@@ -160,7 +160,7 @@ module Riscv151 #(
     logic [DWIDTH-1:0] wb_rs2_res;
     logic [DWIDTH-1:0] fwd_ID_rs2_res;
     // FW_ID_MUX_rs2
-    mux3 #(.N(DWIDTH)) fw_ID_mux_rs2 (
+    mux3 #(DWIDTH) fw_ID_mux_rs2 (
         .in0 ( rd2            ),
         .in1 ( alu_rs2_res    ),
         .in2 ( wb_rs2_res     ),
@@ -209,7 +209,7 @@ module Riscv151 #(
     ////////////////////////////////////////////////////
 
     logic [1:0] pc_sel_jal_X;
-    REGISTER_R_CE #(.N(2)) pc_sel_jal_ID_X (
+    REGISTER_R_CE #(2) pc_sel_jal_ID_X (
         .q   ( pc_sel_jal_X  ),
         .d   ( pc_sel_jal_ID ),
         .rst ( reset         ),
